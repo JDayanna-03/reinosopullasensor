@@ -8,28 +8,29 @@ import { MotionData } from './Model/MotionData.model';
   styleUrl: './motion.component.scss'
 })
 export class MotionComponent implements OnInit, OnDestroy {
-  
   steps: number = 0;
-  currentAcceleration: number = 0;
-  detectionStatus: string = 'Iniciando...';
-  
-  // Parámetros de detección de pasos
-  private stepThreshold: number = 12; // Sensibilidad de detección
-  private peakThreshold: number = 15; // Umbral de pico
-  private valleyThreshold: number = 9; // Umbral de valle
-  
-  // Variables de seguimiento
-  private lastPeakTime: number = 0;
-  private lastAcceleration: number[] = [];
-  private isPotentialStep: boolean = false;
-  private isWalking: boolean = false;
+  totalAcceleration: number = 0;
+  stepThreshold: number = 20; // Ajusta este valor según tu dispositivo
+
+  // Variables para detección de pasos
+  private lastAcceleration: number = 0;
+  private lastStepTime: number = 0;
+  private stepDetected: boolean = false;
 
   constructor(private motionS: MotionService) {}
 
   ngOnInit(): void {
+    this.startStepDetection();
+  }
+
+  ngOnDestroy(): void {
+    this.motionS.stopMotionDetection();
+  }
+
+  private startStepDetection() {
     this.motionS.startMotionDetection((data: MotionData) => {
       if (data.acceleration) {
-        this.processAccelerometerData(
+        this.processMotionData(
           data.acceleration.x, 
           data.acceleration.y, 
           data.acceleration.z
@@ -38,57 +39,27 @@ export class MotionComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.motionS.stopMotionDetection();
-  }
+  private processMotionData(x: number, y: number, z: number) {
+    // Calcular la aceleración total
+    const acceleration = Math.sqrt(x*x + y*y + z*z);
+    this.totalAcceleration = acceleration;
 
-  private processAccelerometerData(x: number, y: number, z: number) {
-    // Calcular aceleración total
-    const totalAcceleration = Math.sqrt(x*x + y*y + z*z);
-    this.currentAcceleration = totalAcceleration;
-
-    // Mantener un historial de las últimas aceleraciones
-    this.lastAcceleration.push(totalAcceleration);
-    if (this.lastAcceleration.length > 5) {
-      this.lastAcceleration.shift();
-    }
-
-    // Algoritmo de detección de pasos más avanzado
     const currentTime = Date.now();
-    const timeDiff = currentTime - this.lastPeakTime;
 
-    // Detectar picos y valles
-    if (this.lastAcceleration.length === 5) {
-      const [a1, a2, a3, a4, a5] = this.lastAcceleration;
-      
-      // Identificar un posible pico
-      const isPeak = (a3 > a2 && a3 > a4 && a3 > this.peakThreshold);
-      
-      // Identificar un posible valle
-      const isValley = (a3 < a2 && a3 < a4 && a3 < this.valleyThreshold);
-
-      // Lógica de detección de pasos
-      if (isPeak && this.isPotentialStep && timeDiff > 300) {
-        this.steps++;
-        this.lastPeakTime = currentTime;
-        this.isWalking = true;
-        this.detectionStatus = '¡Caminando!';
-      }
-
-      // Actualizar estado de potencial paso
-      this.isPotentialStep = isValley;
+    // Detectar pasos basado en cambios de aceleración
+    if (
+      Math.abs(acceleration - this.lastAcceleration) > this.stepThreshold && 
+      (currentTime - this.lastStepTime) > 250 // Prevenir sobre-conteo
+    ) {
+      this.steps++;
+      this.lastStepTime = currentTime;
+      this.stepDetected = true;
     }
 
-    // Actualizar estado si no se detectan pasos
-    if (timeDiff > 3000) {
-      this.isWalking = false;
-      this.detectionStatus = 'Detenido';
-    }
+    this.lastAcceleration = acceleration;
   }
 
-  // Método para reiniciar los pasos
   resetSteps() {
     this.steps = 0;
-    this.detectionStatus = 'Reiniciado';
   }
 }
