@@ -10,14 +10,23 @@ import { MotionData } from '../Model/MotionData.model';
 })
 export class MotionService {
   private accelListener?: PluginListenerHandle;
+  private gyroListener?: PluginListenerHandle;
 
   constructor() { }
 
   async startMotionDetection(callback: (data: MotionData) => void) {
-    // Request motion permissions
+    const motionData: MotionData = {};
+
     this.accelListener = await Motion.addListener('accel', (event) => {
-      const motionData: MotionData = {
-        acceleration: event.acceleration
+      motionData.acceleration = event.acceleration;
+      callback(motionData);
+    });
+
+    this.gyroListener = await Motion.addListener('orientation', (event) => {
+      motionData.rotation = {
+        alpha: event.alpha,
+        beta: event.beta,
+        gamma: event.gamma
       };
       callback(motionData);
     });
@@ -26,6 +35,9 @@ export class MotionService {
   async stopMotionDetection() {
     if (this.accelListener) {
       await this.accelListener.remove();
+    }
+    if (this.gyroListener) {
+      await this.gyroListener.remove();
     }
   }
 }

@@ -1,11 +1,9 @@
 <div class="step-counter-container">
-  <div class="step-circle">
+  <div class="step-counter-circle">
     <div class="step-count">{{ steps }}</div>
   </div>
   <div class="step-details">
-    <p>Pasos: {{ steps }}</p>
-    <p>Aceleración: {{ currentAcceleration.toFixed(2) }} m/s²</p>
-    <p>Estado: {{ detectionStatus }}</p>
-    <button (click)="resetSteps()">Reiniciar Pasos</button>
+    <span>Pasos: {{ steps }}</span>
+    <span>Aceleración: {{ acceleration }} m/s²</span>
   </div>
 </div>

@@ -4,31 +4,31 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #000;
+  color: #fff;
 }
-.step-circle {
+
+.step-counter-circle {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background-color: #4a90e2;
+  background-color: #5D6BE0;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
 }
+
 .step-count {
-  color: white;
   font-size: 48px;
   font-weight: bold;
+  color: #fff;
 }
+
 .step-details {
-  text-align: center;
-}
-button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #4a90e2;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
 }
