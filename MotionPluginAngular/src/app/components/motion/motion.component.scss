@@ -3,32 +3,344 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #000;
-  color: #fff;
+  min-height: 100vh;
+  background: #1a0d05;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(60, 30, 15, 0.4) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(80, 40, 20, 0.3) 0%, transparent 25%);
+  color: #1a0d05;
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, #d9b38c, #d9b38c, transparent);
+    top: 0;
+    left: -100%;
+    animation: scanline 8s linear infinite;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 245, 235, 0.03) 0px,
+      rgba(255, 245, 235, 0.03) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+  }
 }
 
 .step-counter-circle {
-  width: 200px;
-  height: 200px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
-  background-color: #5D6BE0;
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  animation: pulse 2s infinite alternate;
+  
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+  }
+  
+  &::before {
+    width: 260px;
+    height: 260px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    top: -10px;
+    left: -10px;
+    animation: rotate 10s linear infinite;
+  }
+  
+  &::after {
+    width: 280px;
+    height: 280px;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    top: -20px;
+    left: -20px;
+    animation: rotate-reverse 15s linear infinite;
+  }
+  
+  .energy-ring {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top: 4px solid rgba(217, 179, 140, 0.8);
+    border-left: 4px solid rgba(217, 179, 140, 0.8);
+    animation: rotate 3s linear infinite;
+  }
+  
+  .energy-ring-2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-bottom: 2px solid rgba(166, 124, 82, 0.8);
+    border-right: 2px solid rgba(166, 124, 82, 0.8);
+    animation: rotate-reverse 4s linear infinite;
+  }
 }
 
 .step-count {
-  font-size: 48px;
-  font-weight: bold;
-  color: #fff;
+  font-size: 64px;
+  font-weight: 700;
+  color: #1a0d05;
+  text-shadow: 0 0 10px rgba(217, 179, 140, 0.4);
+  z-index: 1;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 10px;
+    background: rgba(217, 179, 140, 0.2);
+    left: -10%;
+    top: 50%;
+    filter: blur(5px);
+    animation: scan 2s ease-in-out infinite;
+  }
 }
 
 .step-details {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   font-size: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 25px 50px;
+  border-radius: 8px;
+  border: 1px solid rgba(217, 179, 140, 0.3);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 48%, rgba(217, 179, 140, 0.2) 50%, transparent 52%);
+    background-size: 200% 200%;
+    animation: shine 3s linear infinite;
+  }
+  
+  span {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    position: relative;
+    padding-left: 15px;
+    color: #1a0d05;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 8px;
+      height: 100%;
+      background: #d9b38c;
+      animation: blink 1.5s infinite alternate;
+    }
+    
+    &:nth-child(2)::before {
+      animation-delay: 0.5s;
+      background: #a67c52;
+    }
+  }
+}
+
+// Partículas flotantes
+@for $i from 1 through 15 {
+  .step-counter-container::after {
+    $size: random(5) + 2px;
+    $speed: random(20) + 10s;
+    $delay: random(20) + s;
+    $top: random(100) + 0%;
+    $left: random(100) + 0%;
+    
+    box-shadow: 
+      #{$left} #{$top} $size rgba(217, 179, 140, 0.7),
+      #{random(100) + 0%} #{random(100) + 0%} #{random(4) + 1px} rgba(166, 124, 82, 0.6),
+      #{random(100) + 0%} #{random(100) + 0%} #{random(3) + 1px} rgba(217, 179, 140, 0.5);
+  }
+}
+
+// Efecto de holograma
+.hologram-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(217, 179, 140, 0.05) 50%,
+    transparent 100%
+  );
+  animation: hologram-shift 3s ease infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+// Efecto de líneas de escaneo en los elementos blancos
+.scan-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(26, 13, 5, 0.03) 0px,
+    rgba(26, 13, 5, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-reverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 100%;
+  }
+}
+
+@keyframes scan {
+  0%, 100% {
+    top: 10%;
+    opacity: 0.5;
+  }
+  50% {
+    top: 90%;
+    opacity: 0.8;
+  }
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes blink {
+  0%, 80% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hologram-shift {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateY(-5px);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .step-counter-circle {
+    width: 200px;
+    height: 200px;
+    
+    &::before {
+      width: 220px;
+      height: 220px;
+    }
+    
+    &::after {
+      width: 240px;
+      height: 240px;
+    }
+    
+    .energy-ring {
+      width: 180px;
+      height: 180px;
+    }
+    
+    .energy-ring-2 {
+      width: 160px;
+      height: 160px;
+    }
+  }
+  
+  .step-count {
+    font-size: 52px;
+  }
+  
+  .step-details {
+    padding: 20px 35px;
+    font-size: 16px;
+  }
 }
