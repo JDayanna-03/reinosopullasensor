@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #d3c1c1;
+  background-color: #f0f0f0;
 }
 .step-circle {
   width: 200px;
@@ -23,4 +23,12 @@
 }
 .step-details {
   text-align: center;
+}
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
 }

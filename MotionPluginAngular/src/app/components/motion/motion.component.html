@@ -5,5 +5,7 @@
   <div class="step-details">
     <p>Pasos: {{ steps }}</p>
     <p>Aceleración: {{ currentAcceleration.toFixed(2) }} m/s²</p>
+    <p>Estado: {{ detectionStatus }}</p>
+    <button (click)="resetSteps()">Reiniciar Pasos</button>
   </div>
 </div>
